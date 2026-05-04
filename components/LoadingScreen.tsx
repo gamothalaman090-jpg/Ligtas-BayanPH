@@ -47,19 +47,19 @@ export default function LoadingScreen() {
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050505] text-[#f8fafc]"
     >
       <div className="flex flex-col items-center max-w-sm w-full px-8">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-8">
           LIGTAS-BAYAN.
         </h1>
-        
+
         <div className="w-full h-[2px] bg-white/10 mb-4 overflow-hidden relative">
           <div ref={progressLineRef} className="absolute left-0 top-0 h-full bg-white w-0"></div>
         </div>
-        
+
         <div className="flex justify-between w-full text-[10px] md:text-xs text-white/50 font-mono uppercase tracking-widest">
           <span>Initializing Offline Protocol...</span>
           <span>{progress}%</span>
