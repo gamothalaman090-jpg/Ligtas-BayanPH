@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState } from "react";
 import { Wifi, Activity, GitBranch } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
   {
@@ -160,60 +157,27 @@ function MockScreen({ step }: { step: Step }) {
   );
 }
 
-// ─── Desktop: Sticky two-column layout ───────────────────────────────────────
+// ─── Desktop: hover-driven two-column layout ─────────────────────────────────
 function DesktopLayout() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const screensRef = useRef<(HTMLDivElement | null)[]>([null, null, null]);
-  const stepsRef = useRef<(HTMLDivElement | null)[]>([null, null, null]);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      screensRef.current.forEach((s, i) => {
-        if (!s) return;
-        gsap.set(s, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 16, scale: i === 0 ? 1 : 0.97 });
-      });
-      stepsRef.current.forEach((s, i) => {
-        if (!s) return;
-        gsap.set(s, { opacity: i === 0 ? 1 : 0.3, borderColor: i === 0 ? steps[0].accent + "55" : "rgba(255,255,255,0.07)" });
-      });
-
-      function activate(activeI: number) {
-        steps.forEach((step, i) => {
-          const s = stepsRef.current[i];
-          const sc = screensRef.current[i];
-          const isActive = i === activeI;
-          if (s) gsap.to(s, { opacity: isActive ? 1 : 0.3, borderColor: isActive ? step.accent + "55" : "rgba(255,255,255,0.07)", duration: 0.45, ease: "power2.out", overwrite: "auto" });
-          if (sc) gsap.to(sc, { opacity: isActive ? 1 : 0, y: isActive ? 0 : 14, scale: isActive ? 1 : 0.97, duration: 0.5, ease: "power3.out", overwrite: "auto" });
-        });
-      }
-
-      steps.forEach((_, i) => {
-        const stepEl = stepsRef.current[i];
-        if (!stepEl) return;
-        ScrollTrigger.create({ trigger: stepEl, start: "top 58%", end: "bottom 42%", onEnter: () => activate(i), onEnterBack: () => activate(i) });
-      });
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
+  const [active, setActive] = useState(0);
 
   return (
-    <div ref={sectionRef} className="grid grid-cols-2 gap-16 items-start">
+    <div className="grid grid-cols-2 gap-16 items-start">
       {/* LEFT: Step cards */}
       <div className="flex flex-col gap-5">
         {steps.map((step, i) => {
           const Icon = step.icon;
+          const isActive = i === active;
           return (
             <div
               key={i}
-              ref={(el) => { stepsRef.current[i] = el; }}
-              className="glass-panel rounded-2xl p-7 cursor-default"
+              onMouseEnter={() => setActive(i)}
+              className="glass-panel rounded-2xl p-7 cursor-pointer select-none"
               style={{
-                border: `1px solid ${i === 0 ? steps[0].accent + "55" : "rgba(255,255,255,0.07)"}`,
-                opacity: i === 0 ? 1 : 0.3,
+                border: `1px solid ${isActive ? step.accent + "55" : "rgba(255,255,255,0.07)"}`,
+                opacity: isActive ? 1 : 0.4,
+                transition: "opacity 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
+                boxShadow: isActive ? `0 0 40px ${step.accentAlpha}` : "none",
               }}
             >
               <div className="flex items-center gap-3 mb-4">
@@ -229,20 +193,29 @@ function DesktopLayout() {
         })}
       </div>
 
-      {/* RIGHT: Sticky mockup */}
+      {/* RIGHT: Sticky mockup — swaps on hover */}
       <div className="sticky top-28 h-fit">
         <div className="relative">
+          {/* Invisible spacer keeps column height stable */}
           <div className="invisible pointer-events-none" aria-hidden="true"><MockScreen step={steps[0]} /></div>
-          {steps.map((step, i) => (
-            <div
-              key={i}
-              ref={(el) => { screensRef.current[i] = el; }}
-              className="absolute inset-0 w-full"
-              style={{ opacity: i === 0 ? 1 : 0, transform: i === 0 ? "none" : "translateY(16px) scale(0.97)" }}
-            >
-              <MockScreen step={step} />
-            </div>
-          ))}
+          {steps.map((step, i) => {
+            const isActive = i === active;
+            return (
+              <div
+                key={i}
+                className="absolute inset-0 w-full"
+                style={{
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? "translateY(0px) scale(1)" : "translateY(14px) scale(0.97)",
+                  transition: "opacity 0.45s cubic-bezier(0.4,0,0.2,1), transform 0.45s cubic-bezier(0.4,0,0.2,1)",
+                  pointerEvents: isActive ? "auto" : "none",
+                }}
+              >
+                <MockScreen step={step} />
+              </div>
+            );
+          })}
+
         </div>
       </div>
     </div>
