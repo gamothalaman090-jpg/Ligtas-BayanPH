@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   // and creates spacer divs that React tries to removeChild after unmount).
   // This only affects development — production builds are unaffected.
   reactStrictMode: false,
+
   images: {
     remotePatterns: [
       {

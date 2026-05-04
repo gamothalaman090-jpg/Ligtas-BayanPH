@@ -207,7 +207,15 @@ function DesktopLayout() {
         {steps.map((step, i) => {
           const Icon = step.icon;
           return (
-            <div key={i} ref={(el) => { stepsRef.current[i] = el; }} className="glass-panel rounded-2xl p-7 cursor-default" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+            <div
+              key={i}
+              ref={(el) => { stepsRef.current[i] = el; }}
+              className="glass-panel rounded-2xl p-7 cursor-default"
+              style={{
+                border: `1px solid ${i === 0 ? steps[0].accent + "55" : "rgba(255,255,255,0.07)"}`,
+                opacity: i === 0 ? 1 : 0.3,
+              }}
+            >
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-[9px] tracking-[0.35em] uppercase font-mono text-white/25">STEP {step.index}</span>
                 <div className="flex-1 h-px bg-white/[0.06]" />
@@ -226,7 +234,12 @@ function DesktopLayout() {
         <div className="relative">
           <div className="invisible pointer-events-none" aria-hidden="true"><MockScreen step={steps[0]} /></div>
           {steps.map((step, i) => (
-            <div key={i} ref={(el) => { screensRef.current[i] = el; }} className="absolute inset-0 w-full">
+            <div
+              key={i}
+              ref={(el) => { screensRef.current[i] = el; }}
+              className="absolute inset-0 w-full"
+              style={{ opacity: i === 0 ? 1 : 0, transform: i === 0 ? "none" : "translateY(16px) scale(0.97)" }}
+            >
               <MockScreen step={step} />
             </div>
           ))}
