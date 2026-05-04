@@ -15,44 +15,49 @@ function CardMesh() {
   const nfcTexture = useTexture('/nfc_design.png');
 
   useEffect(() => {
-    if (!meshRef.current || !materialRef.current) return;
+    const mesh = meshRef.current;
+    const material = materialRef.current;
+    if (!mesh || !material) return;
 
-    // Define colors for triage stages
+    // Guard: wait for the trigger element to exist
+    const trigger = document.getElementById("core-features-container");
+    if (!trigger) return;
+
     const colors = {
       default: new THREE.Color("#ffffff"),
-      red: new THREE.Color("#ef4444"),
-      yellow: new THREE.Color("#f59e0b"),
-      green: new THREE.Color("#10b981"),
+      red:     new THREE.Color("#ef4444"),
+      yellow:  new THREE.Color("#f59e0b"),
+      green:   new THREE.Color("#10b981"),
     };
 
-    // GSAP ScrollTrigger sequence
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#core-features-container",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1, // Smooth scrubbing
-      },
+    // All GSAP work inside context so ctx.revert() fully cleans up
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#core-features-container",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      });
+
+      // Feature 1: NFC
+      tl.to(mesh.rotation, { x: Math.PI / 4, z: -Math.PI / 6, duration: 1 })
+        .to(material.color, { r: colors.default.r, g: colors.default.g, b: colors.default.b, duration: 1 }, "<");
+
+      // Feature 2: AI Triage — cycle triage colours
+      tl.to(mesh.rotation, { y: Math.PI, duration: 2 })
+        .to(material.color, { r: colors.red.r, g: colors.red.g, b: colors.red.b, duration: 0.5 }, "-=1.5")
+        .to(material.color, { r: colors.yellow.r, g: colors.yellow.g, b: colors.yellow.b, duration: 0.5 }, "-=1.0")
+        .to(material.color, { r: colors.green.r, g: colors.green.g, b: colors.green.b, duration: 0.5 }, "-=0.5");
+
+      // Feature 3: Peer-to-Peer Sync
+      tl.to(mesh.rotation, { x: 0, y: Math.PI * 2, z: 0, duration: 2 })
+        .to(mesh.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 2 }, "<")
+        .to(material.color, { r: colors.default.r, g: colors.default.g, b: colors.default.b, duration: 2 }, "<");
     });
 
-    // Initial state (Feature 1: NFC)
-    tl.to(meshRef.current.rotation, { x: Math.PI / 4, z: -Math.PI / 6, duration: 1 })
-      .to(materialRef.current.color, { r: colors.default.r, g: colors.default.g, b: colors.default.b, duration: 1 }, "<");
-
-    // Feature 2: AI Triage (Rotate and cycle colors)
-    tl.to(meshRef.current.rotation, { y: Math.PI, duration: 2 })
-      .to(materialRef.current.color, { r: colors.red.r, g: colors.red.g, b: colors.red.b, duration: 0.5 }, "-=1.5")
-      .to(materialRef.current.color, { r: colors.yellow.r, g: colors.yellow.g, b: colors.yellow.b, duration: 0.5 }, "-=1.0")
-      .to(materialRef.current.color, { r: colors.green.r, g: colors.green.g, b: colors.green.b, duration: 0.5 }, "-=0.5");
-
-    // Feature 3: Peer-to-Peer Sync (Explode/Flatten)
-    tl.to(meshRef.current.rotation, { x: 0, y: Math.PI * 2, z: 0, duration: 2 })
-      .to(meshRef.current.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 2 }, "<")
-      .to(materialRef.current.color, { r: colors.default.r, g: colors.default.g, b: colors.default.b, duration: 2 }, "<");
-
-    return () => {
-      tl.kill();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -68,7 +73,6 @@ function CardMesh() {
           chromaticAberration={0.04}
           backside
         />
-        {/* Inner circuit/chip representation using generated design */}
         <mesh position={[0, 0, 0.01]}>
           <planeGeometry args={[2.8, 2.8]} />
           <meshBasicMaterial map={nfcTexture} transparent opacity={0.85} color="#ffffff" />
@@ -88,7 +92,7 @@ export default function ScrollCanvas() {
         <Sparkles count={100} scale={10} size={2} speed={0.4} opacity={0.2} color="#ffffff" />
         <CardMesh />
       </Canvas>
-      <Loader 
+      <Loader
         containerStyles={{ background: '#050505' }}
         innerStyles={{ width: '300px' }}
         barStyles={{ background: '#ffffff' }}

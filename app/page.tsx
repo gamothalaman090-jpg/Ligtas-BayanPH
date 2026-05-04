@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import ScrollCanvas from "@/components/ScrollCanvas";
+import dynamic from "next/dynamic";
+
+// Three.js canvas MUST be dynamically imported with ssr:false.
+// @react-three/fiber's Canvas directly manipulates the DOM;
+// SSR + React reconciliation causes the removeChild NotFoundError.
+const ScrollCanvas = dynamic(() => import("@/components/ScrollCanvas"), { ssr: false });
+
 import LoadingScreen from "@/components/LoadingScreen";
 import Navbar from "@/components/Navbar";
 import HorizontalScroll from "@/components/HorizontalScroll";
@@ -75,68 +81,68 @@ export default function Home() {
       <div id="core-features-container" className="relative z-10 w-full">
         
         {/* Hero Section */}
-        <section ref={heroRef} className="relative h-screen flex flex-col justify-center items-start px-8 md:px-24 max-w-7xl mx-auto">
-          <p ref={addToRefs} className="text-white/50 tracking-[0.2em] uppercase text-sm mb-6 flex items-center gap-3">
+        <section ref={heroRef} className="relative min-h-screen flex flex-col justify-center items-start px-6 md:px-24 pt-28 pb-16 max-w-7xl mx-auto">
+          <p ref={addToRefs} className="text-white/50 tracking-[0.2em] uppercase text-xs md:text-sm mb-5 flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
             Zero-Internet Infrastructure
           </p>
-          <h1 ref={addToRefs} className="text-7xl md:text-9xl font-semibold tracking-tighter leading-[0.9] mb-8 text-glow">
+          <h1 ref={addToRefs} className="text-5xl sm:text-7xl md:text-9xl font-semibold tracking-tighter leading-[0.9] mb-6 md:mb-8 text-glow">
             Ligtas-<br />Bayan.
           </h1>
-          <h2 ref={addToRefs} className="text-xl md:text-3xl font-light text-white/70 max-w-2xl leading-relaxed">
+          <h2 ref={addToRefs} className="text-base sm:text-xl md:text-3xl font-light text-white/70 max-w-2xl leading-relaxed">
             A decentralized medical ID and triage system for the golden hour.
           </h2>
           
-          <div className="absolute bottom-12 left-8 md:left-24 flex items-center gap-4 text-white/40 animate-bounce">
+          <div className="mt-12 flex items-center gap-4 text-white/40 animate-bounce">
             <ArrowDown className="w-5 h-5" />
             <span className="text-sm uppercase tracking-widest">Scroll to explore</span>
           </div>
         </section>
 
         {/* Feature 1: NFC */}
-        <section id="protocol" className="relative h-screen flex items-center justify-start px-8 md:px-24">
-          <div className="glass-panel p-10 md:p-16 rounded-3xl max-w-2xl transform transition-transform hover:scale-[1.02] duration-500">
-            <Radio className="w-12 h-12 mb-8 text-white/80" />
-            <h3 className="text-5xl md:text-7xl font-medium tracking-tight mb-6">
+        <section id="protocol" className="relative min-h-screen flex items-center justify-start px-6 md:px-24 py-20">
+          <div className="glass-panel p-7 md:p-16 rounded-2xl md:rounded-3xl w-full max-w-2xl">
+            <Radio className="w-10 h-10 md:w-12 md:h-12 mb-6 md:mb-8 text-white/80" />
+            <h3 className="text-4xl md:text-7xl font-medium tracking-tight mb-4 md:mb-6">
               Offline-First <br />
               <span className="text-white/40">NFC Access.</span>
             </h3>
-            <p className="text-lg text-white/60 leading-relaxed font-light">
+            <p className="text-sm md:text-lg text-white/60 leading-relaxed font-light">
               Critical breakdown in communication during disasters costs lives. Ligtas-Bayan utilizes Near Field Communication to store vital health data locally on a smartphone or wearable sticker, allowing instant retrieval in complete dead zones.
             </p>
           </div>
         </section>
 
         {/* Feature 2: AI Triage */}
-        <section id="tech" className="relative h-screen flex items-center justify-end px-8 md:px-24">
-          <div className="glass-panel p-10 md:p-16 rounded-3xl max-w-2xl text-right transform transition-transform hover:scale-[1.02] duration-500">
-            <div className="flex justify-end mb-8">
-              <Activity className="w-12 h-12 text-white/80" />
+        <section id="tech" className="relative min-h-screen flex items-center justify-start md:justify-end px-6 md:px-24 py-20">
+          <div className="glass-panel p-7 md:p-16 rounded-2xl md:rounded-3xl w-full max-w-2xl text-left md:text-right">
+            <div className="flex justify-start md:justify-end mb-6 md:mb-8">
+              <Activity className="w-10 h-10 md:w-12 md:h-12 text-white/80" />
             </div>
-            <h3 className="text-5xl md:text-7xl font-medium tracking-tight mb-6">
+            <h3 className="text-4xl md:text-7xl font-medium tracking-tight mb-4 md:mb-6">
               Vitals-Driven <br />
               <span className="text-white/40">AI Triage.</span>
             </h3>
-            <p className="text-lg text-white/60 leading-relaxed font-light">
+            <p className="text-sm md:text-lg text-white/60 leading-relaxed font-light">
               Integrated decision-tree logic automatically categorizes patients by urgency based on current vitals. Removing human bias during chaotic rescue operations ensures resources are allocated precisely when seconds matter most.
             </p>
-            <div className="flex gap-4 justify-end mt-8">
-              <span className="px-4 py-1.5 rounded-full bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] text-xs uppercase tracking-widest">Critical</span>
-              <span className="px-4 py-1.5 rounded-full bg-[#f59e0b]/20 border border-[#f59e0b]/40 text-[#f59e0b] text-xs uppercase tracking-widest">Urgent</span>
-              <span className="px-4 py-1.5 rounded-full bg-[#10b981]/20 border border-[#10b981]/40 text-[#10b981] text-xs uppercase tracking-widest">Stable</span>
+            <div className="flex gap-3 justify-start md:justify-end mt-6 md:mt-8 flex-wrap">
+              <span className="px-4 py-2 rounded-full bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] text-xs uppercase tracking-widest min-h-[44px] flex items-center">Critical</span>
+              <span className="px-4 py-2 rounded-full bg-[#f59e0b]/20 border border-[#f59e0b]/40 text-[#f59e0b] text-xs uppercase tracking-widest min-h-[44px] flex items-center">Urgent</span>
+              <span className="px-4 py-2 rounded-full bg-[#10b981]/20 border border-[#10b981]/40 text-[#10b981] text-xs uppercase tracking-widest min-h-[44px] flex items-center">Stable</span>
             </div>
           </div>
         </section>
 
         {/* Feature 3: Mesh Sync */}
-        <section className="relative h-screen flex items-center justify-start px-8 md:px-24">
-          <div className="glass-panel p-10 md:p-16 rounded-3xl max-w-2xl transform transition-transform hover:scale-[1.02] duration-500">
-            <Network className="w-12 h-12 mb-8 text-white/80" />
-            <h3 className="text-5xl md:text-7xl font-medium tracking-tight mb-6">
+        <section className="relative min-h-screen flex items-center justify-start px-6 md:px-24 py-20">
+          <div className="glass-panel p-7 md:p-16 rounded-2xl md:rounded-3xl w-full max-w-2xl">
+            <Network className="w-10 h-10 md:w-12 md:h-12 mb-6 md:mb-8 text-white/80" />
+            <h3 className="text-4xl md:text-7xl font-medium tracking-tight mb-4 md:mb-6">
               Peer-to-Peer <br />
               <span className="text-white/40">Mesh Sync.</span>
             </h3>
-            <p className="text-lg text-white/60 leading-relaxed font-light">
+            <p className="text-sm md:text-lg text-white/60 leading-relaxed font-light">
               As connectivity is restored, the mobile app performs a seamless peer-to-peer synchronization to a web-based LGU Command Center. Local officials instantly receive a real-time heatmap of casualties and medical needs across the affected area.
             </p>
           </div>
@@ -157,9 +163,9 @@ export default function Home() {
       <StickySteps />
 
       {/* MediReach Expanded Features Section */}
-      <div id="mission" className="relative z-10 w-full bg-[#050505]/90 backdrop-blur-md pt-24 pb-32 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-8 md:px-24">
-          <div className="mb-20">
+      <div id="mission" className="relative z-10 w-full bg-[#050505]/90 backdrop-blur-md pt-16 md:pt-24 pb-20 md:pb-32 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 md:px-24">
+          <div className="mb-12 md:mb-20">
             <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">
               Your Everyday <br/>
               <span className="text-white/40">Health Companion.</span>
@@ -219,32 +225,32 @@ export default function Home() {
       </div>
 
       {/* Grid CTA Section */}
-      <section id="prepare" className="relative z-10 w-full min-h-[60vh] bg-[#050505] border-t border-white/10 flex items-center justify-center py-24 overflow-hidden">
+      <section id="prepare" className="relative z-10 w-full bg-[#050505] border-t border-white/10 flex items-center justify-center py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-30"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-transparent to-[#050505]"></div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-24 flex flex-col md:flex-row items-center gap-16 md:gap-32 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-24 flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-32 w-full">
           <div className="flex-1">
-            <h2 className="text-7xl md:text-[140px] font-bold tracking-tighter leading-none text-white drop-shadow-2xl">
+            <h2 className="text-6xl sm:text-8xl md:text-[140px] font-bold tracking-tighter leading-none text-white drop-shadow-2xl">
               PREPARE.
             </h2>
           </div>
           
-          <div className="flex-1 flex flex-col gap-10">
-            <p className="text-lg md:text-xl text-white/60 leading-relaxed font-light">
+          <div className="flex-1 flex flex-col gap-7 md:gap-10">
+            <p className="text-base md:text-xl text-white/60 leading-relaxed font-light">
               Turn readiness into action. Equip your community with offline-first protocols so when the grid fails, your response doesn't.
             </p>
             
-            <div className="flex items-center gap-6">
-              <button className="bg-white text-black px-8 py-4 rounded-full text-sm font-semibold uppercase tracking-widest hover:scale-105 transition-transform duration-300">
+            <div className="flex items-center gap-4 flex-wrap">
+              <button className="bg-white text-black px-7 py-3.5 rounded-full text-sm font-semibold uppercase tracking-widest hover:scale-105 transition-transform duration-300 min-h-[48px] cursor-pointer">
                 Download App
               </button>
-              <button className="text-white/60 hover:text-white px-4 py-4 text-sm font-semibold uppercase tracking-widest transition-colors duration-300">
+              <button className="text-white/60 hover:text-white px-4 py-3.5 text-sm font-semibold uppercase tracking-widest transition-colors duration-300 min-h-[48px] cursor-pointer">
                 View Docs
               </button>
             </div>
             
-            <div className="flex items-center gap-4 md:gap-6 pt-8 border-t border-white/10 text-[9px] md:text-xs text-white/40 uppercase tracking-[0.2em] font-mono">
+            <div className="flex items-center gap-4 pt-6 border-t border-white/10 text-[9px] text-white/40 uppercase tracking-[0.2em] font-mono flex-wrap">
               <span>Offline-First</span>
               <span className="w-1 h-1 rounded-full bg-white/20"></span>
               <span>AI-Triage</span>
