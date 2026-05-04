@@ -2,6 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import ScrollCanvas from "@/components/ScrollCanvas";
+import LoadingScreen from "@/components/LoadingScreen";
+import Navbar from "@/components/Navbar";
+import HorizontalScroll from "@/components/HorizontalScroll";
+import StickySteps from "@/components/StickySteps";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, Radio, Activity, Network, MessageSquareHeart, BriefcaseMedical, Pill, MapPin, BookHeart } from "lucide-react";
@@ -9,8 +13,10 @@ import { ArrowDown, Radio, Activity, Network, MessageSquareHeart, BriefcaseMedic
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  const mainRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const textRefs = useRef<HTMLHeadingElement[]>([]);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
     // Initial hero load animation
@@ -20,7 +26,25 @@ export default function Home() {
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.2, stagger: 0.2, ease: "power3.out", delay: 0.5 }
       );
-    }, heroRef);
+
+      gsap.fromTo(
+        cardsRef.current,
+        { y: 60, opacity: 0, scale: 0.95 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: "#features-grid",
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }, mainRef);
 
     return () => ctx.revert();
   }, []);
@@ -31,8 +55,20 @@ export default function Home() {
     }
   };
 
+  const addToCards = (el: HTMLDivElement | null) => {
+    if (el && !cardsRef.current.includes(el)) {
+      cardsRef.current.push(el);
+    }
+  };
+
   return (
-    <main className="relative min-h-screen bg-[#050505] text-[#f8fafc] selection:bg-white/20">
+    <>
+      <LoadingScreen />
+      <Navbar />
+      <main id="hero" ref={mainRef} className="relative min-h-screen bg-transparent text-[#f8fafc] selection:bg-white/20">
+      <div className="mesh-bg"></div>
+      <div className="bg-noise"></div>
+      
       <ScrollCanvas />
 
       {/* GSAP Scroll Trigger Container for 3D Canvas */}
@@ -58,7 +94,7 @@ export default function Home() {
         </section>
 
         {/* Feature 1: NFC */}
-        <section className="relative h-screen flex items-center justify-start px-8 md:px-24">
+        <section id="protocol" className="relative h-screen flex items-center justify-start px-8 md:px-24">
           <div className="glass-panel p-10 md:p-16 rounded-3xl max-w-2xl transform transition-transform hover:scale-[1.02] duration-500">
             <Radio className="w-12 h-12 mb-8 text-white/80" />
             <h3 className="text-5xl md:text-7xl font-medium tracking-tight mb-6">
@@ -72,7 +108,7 @@ export default function Home() {
         </section>
 
         {/* Feature 2: AI Triage */}
-        <section className="relative h-screen flex items-center justify-end px-8 md:px-24">
+        <section id="tech" className="relative h-screen flex items-center justify-end px-8 md:px-24">
           <div className="glass-panel p-10 md:p-16 rounded-3xl max-w-2xl text-right transform transition-transform hover:scale-[1.02] duration-500">
             <div className="flex justify-end mb-8">
               <Activity className="w-12 h-12 text-white/80" />
@@ -114,8 +150,14 @@ export default function Home() {
         </section>
       </div>
 
+      {/* Horizontal Tech Showcase */}
+      <HorizontalScroll />
+
+      {/* Sticky Steps — How It Works */}
+      <StickySteps />
+
       {/* MediReach Expanded Features Section */}
-      <div className="relative z-10 w-full bg-[#050505]/90 backdrop-blur-md pt-24 pb-32 border-t border-white/5">
+      <div id="mission" className="relative z-10 w-full bg-[#050505]/90 backdrop-blur-md pt-24 pb-32 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-8 md:px-24">
           <div className="mb-20">
             <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-6">
@@ -127,10 +169,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div id="features-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature: Symptom Checker */}
-            <div className="glass-panel p-8 rounded-2xl hover:bg-white/[0.02] transition-colors">
-              <MessageSquareHeart className="w-8 h-8 mb-6 text-white/70" />
+            <div ref={addToCards} className="glass-panel group p-8 rounded-2xl cursor-default">
+              <MessageSquareHeart className="w-8 h-8 mb-6 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
               <h4 className="text-2xl font-medium mb-3">AI Symptom Triage</h4>
               <p className="text-white/50 text-sm leading-relaxed">
                 Describe your symptoms naturally. Our AI evaluates urgency levels, considers risk factors, and recommends immediate next steps just like a doctor.
@@ -138,8 +180,8 @@ export default function Home() {
             </div>
 
             {/* Feature: First Aid */}
-            <div className="glass-panel p-8 rounded-2xl hover:bg-white/[0.02] transition-colors">
-              <BriefcaseMedical className="w-8 h-8 mb-6 text-white/70" />
+            <div ref={addToCards} className="glass-panel group p-8 rounded-2xl cursor-default">
+              <BriefcaseMedical className="w-8 h-8 mb-6 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
               <h4 className="text-2xl font-medium mb-3">First Aid Guides</h4>
               <p className="text-white/50 text-sm leading-relaxed">
                 Step-by-step emergency instructions and survival protocols available fully offline when you need them most.
@@ -147,8 +189,8 @@ export default function Home() {
             </div>
 
             {/* Feature: Medicine Safety */}
-            <div className="glass-panel p-8 rounded-2xl hover:bg-white/[0.02] transition-colors">
-              <Pill className="w-8 h-8 mb-6 text-white/70" />
+            <div ref={addToCards} className="glass-panel group p-8 rounded-2xl cursor-default">
+              <Pill className="w-8 h-8 mb-6 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
               <h4 className="text-2xl font-medium mb-3">Medicine Safety</h4>
               <p className="text-white/50 text-sm leading-relaxed">
                 Check potential drug interactions, verify child dosages, and review medication safety guidelines instantly.
@@ -156,8 +198,8 @@ export default function Home() {
             </div>
 
             {/* Feature: Facility Finder */}
-            <div className="glass-panel p-8 rounded-2xl hover:bg-white/[0.02] transition-colors">
-              <MapPin className="w-8 h-8 mb-6 text-white/70" />
+            <div ref={addToCards} className="glass-panel group p-8 rounded-2xl cursor-default">
+              <MapPin className="w-8 h-8 mb-6 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
               <h4 className="text-2xl font-medium mb-3">Facility Finder</h4>
               <p className="text-white/50 text-sm leading-relaxed">
                 Locate operational hospitals, clinics, and pharmacies near you on an interactive map, synchronized via the peer-to-peer mesh.
@@ -165,8 +207,8 @@ export default function Home() {
             </div>
 
             {/* Feature: Family Journal */}
-            <div className="glass-panel p-8 rounded-2xl hover:bg-white/[0.02] transition-colors">
-              <BookHeart className="w-8 h-8 mb-6 text-white/70" />
+            <div ref={addToCards} className="glass-panel group p-8 rounded-2xl cursor-default">
+              <BookHeart className="w-8 h-8 mb-6 text-white/70 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
               <h4 className="text-2xl font-medium mb-3">Family Journal</h4>
               <p className="text-white/50 text-sm leading-relaxed">
                 Track health records, growth milestones, and long-term medical history for everyone in your household securely.
@@ -176,11 +218,49 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Grid CTA Section */}
+      <section id="prepare" className="relative z-10 w-full min-h-[60vh] bg-[#050505] border-t border-white/10 flex items-center justify-center py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-30"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/80 via-transparent to-[#050505]"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-24 flex flex-col md:flex-row items-center gap-16 md:gap-32 w-full">
+          <div className="flex-1">
+            <h2 className="text-7xl md:text-[140px] font-bold tracking-tighter leading-none text-white drop-shadow-2xl">
+              PREPARE.
+            </h2>
+          </div>
+          
+          <div className="flex-1 flex flex-col gap-10">
+            <p className="text-lg md:text-xl text-white/60 leading-relaxed font-light">
+              Turn readiness into action. Equip your community with offline-first protocols so when the grid fails, your response doesn't.
+            </p>
+            
+            <div className="flex items-center gap-6">
+              <button className="bg-white text-black px-8 py-4 rounded-full text-sm font-semibold uppercase tracking-widest hover:scale-105 transition-transform duration-300">
+                Download App
+              </button>
+              <button className="text-white/60 hover:text-white px-4 py-4 text-sm font-semibold uppercase tracking-widest transition-colors duration-300">
+                View Docs
+              </button>
+            </div>
+            
+            <div className="flex items-center gap-4 md:gap-6 pt-8 border-t border-white/10 text-[9px] md:text-xs text-white/40 uppercase tracking-[0.2em] font-mono">
+              <span>Offline-First</span>
+              <span className="w-1 h-1 rounded-full bg-white/20"></span>
+              <span>AI-Triage</span>
+              <span className="w-1 h-1 rounded-full bg-white/20"></span>
+              <span>Mesh-Sync</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="relative z-10 border-t border-white/10 bg-[#050505] py-12 text-center text-white/30 text-xs tracking-widest uppercase">
         <p>© 2026 Ligtas-Bayan. Not a substitute for professional medical advice.</p>
         <p className="mt-2">Built with care for SDG 3: Good Health and Well-being</p>
       </footer>
     </main>
+    </>
   );
 }
