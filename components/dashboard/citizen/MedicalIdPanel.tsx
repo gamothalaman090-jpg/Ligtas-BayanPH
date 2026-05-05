@@ -85,20 +85,24 @@ export default function MedicalIdPanel({ onClose, onSave }: Props) {
   const pct = computeProgress(data);
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      {/* Backdrop */}
-      <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-50">
+      {/* Backdrop — always full screen */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
-      {/* Panel */}
-      <div className="relative w-full max-w-xl bg-[#0a0a0a] border-l border-white/10 flex flex-col h-full overflow-hidden animate-in slide-in-from-right duration-300">
+      {/* Panel — slides from right, sits on top */}
+      <div className="absolute inset-y-0 right-0 w-full max-w-xl bg-[#0a0a0a] border-l border-white/10 flex flex-col overflow-hidden animate-in slide-in-from-right duration-300">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
           <div>
             <p className="text-[9px] uppercase tracking-[0.25em] text-white/40 font-mono mb-1">Medical ID</p>
             <h2 className="text-lg font-semibold tracking-tight">Edit Your Profile</h2>
           </div>
-          <button onClick={onClose} className="p-2 text-white/40 hover:text-white hover:bg-white/10 rounded-lg transition-colors border border-white/10 cursor-pointer">
-            <X className="w-4 h-4" />
+          <button
+            onClick={onClose}
+            aria-label="Close panel"
+            className="w-11 h-11 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-xl transition-colors border border-white/10 cursor-pointer flex-shrink-0"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
 

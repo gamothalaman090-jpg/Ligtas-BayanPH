@@ -14,7 +14,7 @@ export default function DashboardLayout({
       <div className="bg-noise"></div>
       
       {/* Minimal Top Nav for Dashboard */}
-      <nav className="relative z-40 border-b border-white/5 bg-[#050505]/50 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+      <nav className="relative z-10 border-b border-white/5 bg-[#050505]/50 backdrop-blur-md px-6 py-4 flex items-center justify-between">
         <Link href="/" className="text-xs font-bold tracking-widest text-white hover:text-white/70 transition-colors flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" />
           LIGTAS-BAYAN
@@ -30,7 +30,7 @@ export default function DashboardLayout({
         </Link>
       </nav>
 
-      <main className="relative z-10">
+      <main>
         {children}
       </main>
     </div>

@@ -134,10 +134,10 @@ function DesktopScroll() {
 
   return (
     <div ref={sectionRef} className="relative bg-[#050505] overflow-hidden">
-      <div className="absolute top-0 left-0 z-20 px-8 md:px-16 pt-14 md:pt-20 pointer-events-none">
+      <div className="absolute inset-y-0 left-0 z-20 flex flex-col justify-center pointer-events-none px-8 md:px-16">
         <p className="text-white/25 text-[9px] tracking-[0.35em] uppercase font-mono mb-4">Ligtas-Bayan / Core Systems</p>
-        <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-[0.9] text-white">FIVE<br />SYSTEMS.</h2>
-        <h2 className="text-5xl md:text-6xl font-black tracking-tighter leading-[0.9] text-white/20 mt-1">ONE<br />PROTOCOL.</h2>
+        <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-white">FIVE<br />SYSTEMS.</h2>
+        <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] text-white/20 mt-1">ONE<br />PROTOCOL.</h2>
         <p className="text-white/30 text-xs mt-6 max-w-[170px] leading-relaxed font-light">Scroll through each capability.</p>
       </div>
 

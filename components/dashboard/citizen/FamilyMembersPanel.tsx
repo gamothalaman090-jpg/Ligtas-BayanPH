@@ -42,9 +42,9 @@ export default function FamilyMembersPanel({ onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex">
-      <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-xl bg-[#0a0a0a] border-l border-white/10 flex flex-col h-full overflow-hidden animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-0 z-50">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-y-0 right-0 w-full max-w-xl bg-[#0a0a0a] border-l border-white/10 flex flex-col overflow-hidden animate-in slide-in-from-right duration-300">
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
@@ -52,8 +52,12 @@ export default function FamilyMembersPanel({ onClose }: Props) {
             <p className="text-[9px] uppercase tracking-[0.25em] text-white/40 font-mono mb-1">Family Network</p>
             <h2 className="text-lg font-semibold tracking-tight">Linked Members</h2>
           </div>
-          <button onClick={onClose} className="p-2 text-white/40 hover:text-white hover:bg-white/10 rounded-lg transition-colors border border-white/10 cursor-pointer">
-            <X className="w-4 h-4" />
+          <button
+            onClick={onClose}
+            aria-label="Close panel"
+            className="w-11 h-11 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 rounded-xl transition-colors border border-white/10 cursor-pointer flex-shrink-0"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -133,7 +137,7 @@ export default function FamilyMembersPanel({ onClose }: Props) {
                   className="bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-white/30 transition-colors"
                 >
                   <option value="" className="bg-[#0a0a0a]">Blood</option>
-                  {["A+","A-","B+","B-","AB+","AB-","O+","O-"].map((b) => (
+                  {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((b) => (
                     <option key={b} value={b} className="bg-[#0a0a0a]">{b}</option>
                   ))}
                 </select>
