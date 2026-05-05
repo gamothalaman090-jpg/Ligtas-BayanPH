@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 function CardMesh() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<unknown>(null);
+  const materialRef = useRef<{ color: THREE.Color } | null>(null);
   const nfcTexture = useTexture('/nfc_design.png');
 
   useEffect(() => {
