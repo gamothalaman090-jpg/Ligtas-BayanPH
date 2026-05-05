@@ -171,7 +171,7 @@ export default function Home() {
               <span className="text-white/40">Health Companion.</span>
             </h2>
             <p className="text-lg text-white/50 max-w-2xl font-light">
-              From critical disaster response to everyday medical guidance, Ligtas-Bayan integrates comprehensive tools to manage your family's health seamlessly, even offline.
+              From critical disaster response to everyday medical guidance, Ligtas-Bayan integrates comprehensive tools to manage your family&apos;s health seamlessly, even offline.
             </p>
           </div>
 
@@ -238,7 +238,7 @@ export default function Home() {
           
           <div className="flex-1 flex flex-col gap-7 md:gap-10">
             <p className="text-base md:text-xl text-white/60 leading-relaxed font-light">
-              Turn readiness into action. Equip your community with offline-first protocols so when the grid fails, your response doesn't.
+              Turn readiness into action. Equip your community with offline-first protocols so when the grid fails, your response doesn&apos;t.
             </p>
             
             <div className="flex items-center gap-4 flex-wrap">

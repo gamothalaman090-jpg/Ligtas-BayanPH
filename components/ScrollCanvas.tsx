@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Environment, Float, MeshTransmissionMaterial, Sparkles, Loader, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 function CardMesh() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<any>(null);
+  const materialRef = useRef<unknown>(null);
   const nfcTexture = useTexture('/nfc_design.png');
 
   useEffect(() => {

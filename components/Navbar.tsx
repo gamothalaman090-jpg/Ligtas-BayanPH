@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
+import LoginModal from "./LoginModal";
 
 const links = [
   { label: "The Protocol", id: "protocol" },
@@ -13,6 +14,7 @@ const links = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,7 +41,8 @@ export default function Navbar() {
   };
 
   return (
-    <div
+    <>
+      <div
       ref={menuRef}
       className={`fixed left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ${
         scrolled
@@ -81,14 +84,16 @@ export default function Navbar() {
         </div>
 
         {/* Desktop CTA */}
-        <button
-          onClick={() => scrollTo("prepare")}
-          className={`hidden md:flex bg-white text-black rounded-full font-semibold uppercase tracking-widest hover:scale-105 transition-all duration-300 cursor-pointer items-center justify-center ${
-            scrolled ? "px-4 py-1.5 text-[10px]" : "px-6 py-2.5 text-xs"
-          }`}
-        >
-          Get Started
-        </button>
+        <div className="hidden md:flex items-center">
+          <button
+            onClick={() => setIsLoginModalOpen(true)}
+            className={`bg-white text-black rounded-full font-semibold uppercase tracking-widest hover:scale-105 transition-all duration-300 cursor-pointer flex items-center justify-center ${
+              scrolled ? "px-4 py-1.5 text-[10px]" : "px-6 py-2.5 text-xs"
+            }`}
+          >
+            Get Started
+          </button>
+        </div>
 
         {/* Mobile hamburger — min 44px touch target */}
         <button
@@ -121,13 +126,23 @@ export default function Navbar() {
           ))}
           <div className="mx-4 my-2 h-px bg-white/[0.06]" />
           <button
-            onClick={() => scrollTo("prepare")}
-            className="mx-4 mb-2 bg-white text-black px-5 py-3 rounded-full text-xs font-semibold uppercase tracking-widest hover:scale-[1.02] transition-transform cursor-pointer min-h-[48px]"
+            onClick={() => {
+              setMenuOpen(false);
+              setIsLoginModalOpen(true);
+            }}
+            className="mx-4 mb-2 mt-1 bg-white text-black px-5 py-3 rounded-full text-xs font-semibold uppercase tracking-widest hover:scale-[1.02] transition-transform cursor-pointer min-h-[48px]"
           >
             Get Started
           </button>
         </div>
       </div>
-    </div>
+      </div>
+      
+      {/* Login Modal */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
+    </>
   );
 }
